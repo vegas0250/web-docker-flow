@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  apache:
+    container_name: 'apache'
+    build: 
+      context: ./bin/apache
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./www:/var/www/html
+      - ./config/vhosts:/etc/apache2/sites-enabled
+      - ./logs/apache2:/var/log/apache2
+  db:
+    container_name: 'db'
+    image: postgres:9.6
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./bin/postgres/data:/var/lib/postgresql/data
+  elasticsearch:
+    image: elasticsearch:6.7.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+    #  - cluster.name=shop-cluster
+    #  - bootstrap.memory_lock=true
+    #  - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    #ulimits:
+    #  memlock:
+    #    soft: -1
+    #    hard: -1
+    volumes:
+      - ./bin/elasticsearch/data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
