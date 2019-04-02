@@ -1,1 +1,3 @@
 www/*
+bin/elasticsearch/*
+bin/postgres/*
